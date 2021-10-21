@@ -1,17 +1,17 @@
 import pickle
+import time
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.service import Service
-import time
-
 from selenium.webdriver.common.by import By
+
 
 
 def get_cookies(driver):
     """Получает куки от сайта и устанавливает их в драйвер"""
     driver.get(url + '40482596')
-    time.sleep(3)
+    driver.implicitly_wait(5)
 
     #Одобряем куки
     driver.find_element(By.XPATH, '/html/body/div[8]/div/div[2]/button/span').click()
@@ -21,16 +21,16 @@ def get_cookies(driver):
     actions = ActionChains(driver)
     actions.move_to_element(link).perform()
     link.click()
-    time.sleep(1)
+    driver.implicitly_wait(5)
 
     #Выбираем магазин
     driver.find_element(By.XPATH, '/html/body/main/div/div[2]/div/div[4]/div/div[2]/div/div/div/div[4]/div[7]/div[2]/label/div/input').click()
     pickle.dump(driver.get_cookies(), open(f"cookies", "wb"))
-    time.sleep(1)
+    driver.implicitly_wait(5)
 
     #Одобряем выбор магазина
     driver.find_element(By.XPATH, '/html/body/main/div/div[2]/div/div[4]/div/div[3]/button/span').click()
-    time.sleep(1)
+    driver.implicitly_wait(5)
 
 
 # options
@@ -69,3 +69,7 @@ except Exception as ex:
 finally:
     driver.close()
     driver.quit()
+
+
+if __name__ == '__main__':
+    parse

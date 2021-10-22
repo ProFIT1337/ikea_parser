@@ -58,5 +58,11 @@ def parse():
     return data_list
 
 
+def save_data_to_file(final_data_list):
+    """Сохраняет полученные данные в файл result.xls"""
+    data_df = pandas.DataFrame(final_data_list)
+    data_df.to_excel('result.xls')
+
+
 if __name__ == '__main__':
     parse()

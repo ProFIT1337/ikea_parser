@@ -27,7 +27,8 @@ def get_cookies(driver, vendor_code):
 
     # Выбираем магазин
     driver.find_element(By.XPATH,
-                        '/html/body/main/div/div[2]/div/div[4]/div/div[2]/div/div/div/div[4]/div[7]/div[2]/label/div/input').click()
+                        '/html/body/main/div/div[2]/div/div[4]/div/div[2]/div/div/div/div[4]/div[7]/div[2]/label/div/input'
+                        ).click()
     pickle.dump(driver.get_cookies(), open(f"cookies", "wb"))
     driver.implicitly_wait(3)
 
@@ -73,7 +74,7 @@ def try_get_info_about_delivery_time(driver):
             '/html/body/main/div/div[2]/div/div[4]/div/div[2]/div/div/div[3]/div/div[2]/p/span/span[2]'
         ).text
 
-        return f"Поступление ожидается с {start_data}, до {final_data}"
+        return f"{start_data} - {final_data}"
 
     except Exception as e:
         return None
@@ -93,6 +94,8 @@ def try_get_info_about_quantity(driver):
 
 def get_info_about_availability(driver, vendor_code):
     driver.get(url + vendor_code)
+    if driver.current_url == 'https://www.ikea.com/ru/ru/cat/tovary-products/':
+        return 'Error'
     try:
         # Возвращаем данные о количестве товаров
         driver.find_element(By.CLASS_NAME, 'range-revamp-indicator__no-wrap').click()
@@ -106,9 +109,9 @@ def get_info_about_availability(driver, vendor_code):
             return info
 
         driver.find_element(By.CLASS_NAME, 'range-revamp-modal-body')
-        return 'Нет в наличии в Новосибирске'
+        return 'Нет в наличии' # Нет только в Новосибирске
     except Exception as e:
-        return 'Нет в наличии во всех магазинах'
+        return 'Нет в наличии' # Нет во всех магазинах
 
 
 def add_availability_information(driver, data_list):
@@ -129,7 +132,6 @@ def add_availability_information(driver, data_list):
                 data_dict[data_list[i][1]] = info_about_availability
 
             data_list[i].append(info_about_availability)
-            data_list[i].append(driver.current_url)
         print(f'Выполняется {i}/{number_of_records - 1} |  {data_list[i][2]} - {info_about_availability}')
 
     return data_list
